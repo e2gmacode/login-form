@@ -11,6 +11,8 @@
   "rules": {
     "no-unused-vars": ["off"],
     "no-undef": ["off"],
+    "no-alert": ["off"],
+    "import/extensions": ["off"],
     "linebreak-style": ["off"]
   },
   "extends": ["next/core-web-vitals", "airbnb-base"]
