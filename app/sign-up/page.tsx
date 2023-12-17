@@ -16,7 +16,7 @@ import styles from './page.module.css';
  */
 const SignUp = () => {
   // ユーザー名
-  const [username, setUserNmae] = useState('');
+  const [userName, setUserName] = useState('');
   // メールアドレス
   const [email, setEmail] = useState('');
   // パスワード
@@ -62,14 +62,16 @@ const SignUp = () => {
         <label htmlFor="email">ユーザー名</label>
         <input
           type="username"
+          value={userName}
           placeholder="氏名"
           id="username"
-          onChange={(e) => setUserNmae(e.target.value)}
+          onChange={(e) => setUserName(e.target.value)}
         />
 
         <label htmlFor="email">メールアドレス</label>
         <input
           type="email"
+          value={email}
           placeholder="メールアドレス"
           id="email"
           onChange={(e) => setEmail(e.target.value)}
@@ -78,6 +80,7 @@ const SignUp = () => {
         <label htmlFor="password">パスワード</label>
         <input
           type="password"
+          value={password}
           placeholder="パスワード"
           id="password"
           onChange={(e) => setPassword(e.target.value)}
@@ -85,6 +88,7 @@ const SignUp = () => {
         <label htmlFor="rePassword">パスワード（再入力）</label>
         <input
           type="password"
+          value={rePassword}
           placeholder="パスワード"
           id="rePassword"
           onChange={(e) => setRePassword(e.target.value)}
@@ -133,6 +137,7 @@ const SignUp = () => {
         <input
           type="text"
           name="birthday"
+          value={birthday}
           placeholder="1900/01/01"
           onChange={(e) => setBirthday(e.target.value)}
         />
