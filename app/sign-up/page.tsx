@@ -3,9 +3,10 @@
 /* eslint-disable object-curly-newline */
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChangeEvent, MouseEvent, useRef, useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/app/firebase/config';
+import { ChangeEvent, MouseEvent, useState } from 'react';
+import { createUserWithEmailAndPassword, AuthError, signOut } from 'firebase/auth';
+import { auth, db } from '@/app/firebase/config';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import styles from './page.module.css';
 
 /**
@@ -122,17 +123,36 @@ const SignUp = () => {
       // バリデートチェックを通過したら、認証情報登録を行う
       await createUserWithEmailAndPassword(auth, email, password)
         .then((credential) => {
-          console.log(credential.user.uid);
+          const userDocumentRef = doc(db, 'users', credential.user.uid);
+          setDoc(userDocumentRef, {
+            name: userName,
+            icon,
+            birthday,
+            sex,
+          }).then(() => {
+            // 登録が終わったら、サインアウトする
+            signOut(auth);
+          });
         })
-        .catch((e) => {
-          alert(e.message);
+        .catch((e: Error) => {
+          const authError = e as AuthError;
+          // const errorCode = authError.code;
+          const errorMessage = authError.message;
+
+          if (errorMessage === 'auth/weak-password') {
+            alert('このパスワードでは、弱すぎます。');
+          } else if (errorMessage === 'auth/email-already-in-use') {
+            alert('すでに登録されているメールアドレスです');
+          } else {
+            alert(errorMessage);
+          }
         });
     }
   };
 
   return (
     <main className={styles.main}>
-      <div className={styles.form}>
+      <form className={styles.form}>
         <h3>サインアップ画面</h3>
         <label htmlFor="email">ユーザー名</label>
         <input
@@ -300,7 +320,7 @@ const SignUp = () => {
         <button type="button" onClick={handleRegister}>
           登録
         </button>
-      </div>
+      </form>
     </main>
   );
 };
