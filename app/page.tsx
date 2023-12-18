@@ -1,95 +1,106 @@
+'use client';
+
 import Image from 'next/image';
+import { useEffect, useState, MouseEvent } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
+import { auth, db } from './firebase/config';
 
 export default function Home() {
+  // ローディング
+  const [isLoading, setIsLoading] = useState(true);
+
+  // ユーザー名
+  const [userName, setUserName] = useState('');
+  // メールアドレス
+  const [email, setEmail] = useState('');
+  // プロフィールアイコン
+  const [icon, setIcon] = useState(1);
+  // 生年月日
+  const [birthday, setBirthday] = useState('');
+  // 性別
+  const [sex, setSex] = useState('m');
+
+  // ルーター
+  const router = useRouter();
+
+  // ログアウト処理
+  const handleLogout = async (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    await signOut(auth).then(() => {
+      // ログアウト後、ログイン画面へ
+      router.push('/sign-in');
+    });
+  };
+
+  // 初回レンダリング時
+  useEffect(() => {
+    // ログイン状態をチェック
+    onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser !== null) {
+        // ユーザー情報を取得
+        const userDocumentRef = doc(db, 'users', currentUser.uid);
+        getDoc(userDocumentRef).then((documentSnapshot) => {
+          if (documentSnapshot !== undefined) {
+            setEmail(currentUser.email!);
+            setIcon(documentSnapshot.data()!.icon);
+            setUserName(documentSnapshot.data()!.name);
+            setBirthday(documentSnapshot.data()!.birthday);
+            setSex(documentSnapshot.data()!.sex);
+          }
+          setIsLoading(false);
+        });
+      } else {
+        // 未認証の場合、ログイン画面へ
+        router.push('/sign-in');
+      }
+    });
+  }, []);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <>
+      {isLoading ? (
+        <main className={styles.main}></main>
+      ) : (
+        <main className={styles.main}>
+          <div className={styles.base}>
+            <h3>ようこそ</h3>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+            <span className={styles.user}>
+              <div className={styles.icon}>
+                {icon === 1 && (
+                  <Image width={48} height={44} src="/icon_business_man01.png" alt="男1" />
+                )}
+                {icon === 2 && (
+                  <Image width={48} height={44} src="/icon_business_man07.png" alt="男2" />
+                )}
+                {icon === 3 && (
+                  <Image width={48} height={44} src="/icon_business_woman01.png" alt="女1" />
+                )}
+                {icon === 4 && (
+                  <Image width={48} height={44} src="/icon_business_woman02.png" alt="女2" />
+                )}
+              </div>
+              <div className={styles.name}>{userName} さん</div>
+            </span>
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+            <label>メールアドレス</label>
+            <div className={styles.confirm}>{email}</div>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+            <label>生年月日</label>
+            <div className={styles.confirm}>{birthday}</div>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
+            <label>性別</label>
+            <div className={styles.confirm}>{sex === 'm' ? '男性' : '女性'}</div>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+            <button type="button" onClick={handleLogout}>
+              ログアウト
+            </button>
+          </div>
+        </main>
+      )}
+    </>
   );
 }
