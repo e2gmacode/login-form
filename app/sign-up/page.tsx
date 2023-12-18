@@ -32,6 +32,77 @@ const SignUp = () => {
   // 利用規約の同意
   const [agree, setAgree] = useState<boolean>(false);
 
+  // エラーメッセージ
+  const [message, setMessage] = useState<string[]>();
+
+  // バリデート
+  const validate = () => {
+    const msg = [];
+    let check = false;
+    // ユーザー名
+    if (userName === '') {
+      msg.push('ユーザー名を入力してください');
+      check = true;
+    } else {
+      msg.push('');
+    }
+
+    // メールアドレス
+    // eslint-disable-next-line no-useless-escape
+    const regex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (email === '') {
+      msg.push('メールアドレスを入力してください');
+      check = true;
+    } else if (!regex.test(email)) {
+      msg.push('メールアドレス形式で入力してください');
+      check = true;
+    } else {
+      msg.push('');
+    }
+
+    // パスワード
+    if (password === '') {
+      msg.push('パスワードを入力してください');
+      check = true;
+    } else if (password.length < 6) {
+      msg.push('6桁以上で入力してください');
+      check = true;
+    } else {
+      msg.push('');
+    }
+
+    // パスワード（再入力）
+    if (password !== rePassword) {
+      msg.push('パスワードが一致しません');
+      check = true;
+    } else {
+      msg.push('');
+    }
+
+    // 生年月日
+    const regex2 = /^[0-9]{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/;
+    if (birthday === '') {
+      msg.push('生年月日を入力してください');
+      check = true;
+    } else if (!regex2.test(birthday)) {
+      msg.push('yyyy/MM/ddの形式で入力してください');
+      check = true;
+    } else {
+      msg.push('');
+    }
+
+    // 利用規約の同意
+    if (!agree) {
+      msg.push('利用規約の同意が必要です');
+      check = true;
+    } else {
+      msg.push('');
+    }
+
+    setMessage(msg);
+    return check;
+  };
+
   // プロフィールアイコン変更時
   const handleChangeIcon = (iconNum: number) => {
     setIcon(iconNum);
@@ -46,13 +117,17 @@ const SignUp = () => {
   const handleRegister = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then((credential) => {
-        console.log(credential.user.uid);
-      })
-      .catch((e) => {
-        alert(e.message);
-      });
+    // バリデート
+    if (!validate()) {
+      // バリデートチェックを通過したら、認証情報登録を行う
+      await createUserWithEmailAndPassword(auth, email, password)
+        .then((credential) => {
+          console.log(credential.user.uid);
+        })
+        .catch((e) => {
+          alert(e.message);
+        });
+    }
   };
 
   return (
@@ -67,6 +142,11 @@ const SignUp = () => {
           id="username"
           onChange={(e) => setUserName(e.target.value)}
         />
+        {message !== undefined && message[0] !== '' ? (
+          <span className={styles.err_message}>{message[0]}</span>
+        ) : (
+          ''
+        )}
 
         <label htmlFor="email">メールアドレス</label>
         <input
@@ -76,6 +156,11 @@ const SignUp = () => {
           id="email"
           onChange={(e) => setEmail(e.target.value)}
         />
+        {message !== undefined && message[1] !== '' ? (
+          <span className={styles.err_message}>{message[1]}</span>
+        ) : (
+          ''
+        )}
 
         <label htmlFor="password">パスワード</label>
         <input
@@ -85,6 +170,12 @@ const SignUp = () => {
           id="password"
           onChange={(e) => setPassword(e.target.value)}
         />
+        {message !== undefined && message[2] !== '' ? (
+          <span className={styles.err_message}>{message[2]}</span>
+        ) : (
+          ''
+        )}
+
         <label htmlFor="rePassword">パスワード（再入力）</label>
         <input
           type="password"
@@ -93,6 +184,11 @@ const SignUp = () => {
           id="rePassword"
           onChange={(e) => setRePassword(e.target.value)}
         />
+        {message !== undefined && message[3] !== '' ? (
+          <span className={styles.err_message}>{message[3]}</span>
+        ) : (
+          ''
+        )}
 
         <label htmlFor="icon">プロフィールアイコン</label>
         <div className={styles.icons}>
@@ -133,6 +229,7 @@ const SignUp = () => {
             />
           </div>
         </div>
+
         <label htmlFor="birthday">生年月日</label>
         <input
           type="text"
@@ -141,6 +238,12 @@ const SignUp = () => {
           placeholder="1900/01/01"
           onChange={(e) => setBirthday(e.target.value)}
         />
+        {message !== undefined && message[4] !== '' ? (
+          <span className={styles.err_message}>{message[4]}</span>
+        ) : (
+          ''
+        )}
+
         <label htmlFor="sex">性別</label>
         <span>
           <input
@@ -188,6 +291,11 @@ const SignUp = () => {
             ※利用規約はこちら
           </Link>
         </span>
+        {message !== undefined && message[5] !== '' ? (
+          <span className={styles.err_message}>{message[5]}</span>
+        ) : (
+          ''
+        )}
 
         <button type="button" onClick={handleRegister}>
           登録

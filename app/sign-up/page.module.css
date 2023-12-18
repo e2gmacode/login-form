@@ -115,3 +115,9 @@
   border: 3px solid #e50c8eda;
   cursor: pointer;
 }
+
+.err_message {
+  color: red;
+  font-size: 12px;
+  font-weight: 600;
+}
