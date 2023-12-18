@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { ChangeEvent, MouseEvent, useState } from 'react';
 import { createUserWithEmailAndPassword, AuthError, signOut } from 'firebase/auth';
 import { auth, db } from '@/app/firebase/config';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 
 /**
@@ -32,6 +33,9 @@ const SignUp = () => {
   const [sex, setSex] = useState('m');
   // 利用規約の同意
   const [agree, setAgree] = useState<boolean>(false);
+
+  // ルーター
+  const router = useRouter();
 
   // エラーメッセージ
   const [message, setMessage] = useState<string[]>();
@@ -132,6 +136,8 @@ const SignUp = () => {
           }).then(() => {
             // 登録が終わったら、サインアウトする
             signOut(auth);
+            // ログイン画面へ
+            router.push('/sign-in');
           });
         })
         .catch((e: Error) => {
