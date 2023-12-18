@@ -66,3 +66,10 @@
   font-size: 12px;
   font-weight: 600;
 }
+
+.login_err_message {
+  color: red;
+  font-size: 12px;
+  font-weight: 600;
+  padding-top: 1rem;
+}
