@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, MouseEvent } from 'react';
+import Link from 'next/link';
 import styles from './page.module.css';
 
 /**
@@ -74,8 +75,8 @@ const SignIn = () => {
           id="email"
           onChange={(e) => setEmail(e.target.value)}
         />
-        {message !== undefined && message[1] !== '' ? (
-          <span className={styles.err_message}>{message[1]}</span>
+        {message !== undefined && message[0] !== '' ? (
+          <span className={styles.err_message}>{message[0]}</span>
         ) : (
           ''
         )}
@@ -88,11 +89,13 @@ const SignIn = () => {
           id="password"
           onChange={(e) => setPassword(e.target.value)}
         />
-        {message !== undefined && message[2] !== '' ? (
-          <span className={styles.err_message}>{message[2]}</span>
+        {message !== undefined && message[1] !== '' ? (
+          <span className={styles.err_message}>{message[1]}</span>
         ) : (
           ''
         )}
+
+        <Link href="sign-up">※新規登録はこちら</Link>
 
         <button type="button" onClick={handleLogin}>
           ログイン
