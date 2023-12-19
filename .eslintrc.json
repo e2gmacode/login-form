@@ -16,5 +16,10 @@
     "linebreak-style": ["off"],
     "react-hooks/exhaustive-deps": ["off"]
   },
-  "extends": ["next/core-web-vitals", "airbnb-base"]
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb-base",
+    "plugin:testing-library/react",
+    "plugin:jest-dom/recommended"
+  ]
 }
