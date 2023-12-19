@@ -219,7 +219,7 @@ const SignUp = () => {
         <label htmlFor="icon">プロフィールアイコン</label>
         <div className={styles.icons}>
           <div className={icon === 1 ? styles.icon_active : styles.icon}>
-            <Image
+            <img
               width={48}
               height={44}
               src="/icon_business_man01.png"
@@ -228,7 +228,7 @@ const SignUp = () => {
             />
           </div>
           <div className={icon === 2 ? styles.icon_active : styles.icon}>
-            <Image
+            <img
               width={48}
               height={44}
               src="/icon_business_man07.png"
@@ -237,7 +237,7 @@ const SignUp = () => {
             />
           </div>
           <div className={icon === 3 ? styles.icon_active : styles.icon}>
-            <Image
+            <img
               width={48}
               height={44}
               src="/icon_business_woman01.png"
@@ -246,7 +246,7 @@ const SignUp = () => {
             />
           </div>
           <div className={icon === 4 ? styles.icon_active : styles.icon}>
-            <Image
+            <img
               width={48}
               height={44}
               src="/icon_business_woman02.png"

@@ -71,16 +71,16 @@ export default function Home() {
             <span className={styles.user}>
               <div className={styles.icon}>
                 {icon === 1 && (
-                  <Image width={48} height={44} src="/icon_business_man01.png" alt="男1" />
+                  <img width={48} height={44} src="/icon_business_man01.png" alt="男1" />
                 )}
                 {icon === 2 && (
-                  <Image width={48} height={44} src="/icon_business_man07.png" alt="男2" />
+                  <img width={48} height={44} src="/icon_business_man07.png" alt="男2" />
                 )}
                 {icon === 3 && (
-                  <Image width={48} height={44} src="/icon_business_woman01.png" alt="女1" />
+                  <img width={48} height={44} src="/icon_business_woman01.png" alt="女1" />
                 )}
                 {icon === 4 && (
-                  <Image width={48} height={44} src="/icon_business_woman02.png" alt="女2" />
+                  <img width={48} height={44} src="/icon_business_woman02.png" alt="女2" />
                 )}
               </div>
               <div className={styles.name}>{userName} さん</div>
