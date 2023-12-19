@@ -160,9 +160,9 @@ const SignUp = () => {
     <main className={styles.main}>
       <form className={styles.form}>
         <h3>サインアップ画面</h3>
-        <label htmlFor="email">ユーザー名</label>
+        <label htmlFor="username">ユーザー名</label>
         <input
-          type="username"
+          type="text"
           value={userName}
           placeholder="氏名"
           id="username"
@@ -259,7 +259,7 @@ const SignUp = () => {
         <label htmlFor="birthday">生年月日</label>
         <input
           type="text"
-          name="birthday"
+          id="birthday"
           value={birthday}
           placeholder="1900/01/01"
           onChange={(e) => setBirthday(e.target.value)}
@@ -303,7 +303,7 @@ const SignUp = () => {
             name="agree"
             id="agree"
             checked={agree}
-            onClick={() => setAgree(!agree)}
+            onChange={() => setAgree(!agree)}
           />
           <label className={styles.agree_label} htmlFor="agree">
             同意する
