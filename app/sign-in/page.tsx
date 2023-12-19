@@ -50,9 +50,6 @@ const SignIn = () => {
     if (password === '') {
       msg.push('パスワードを入力してください');
       check = true;
-    } else if (password.length < 6) {
-      msg.push('6桁以上で入力してください');
-      check = true;
     } else {
       msg.push('');
     }
